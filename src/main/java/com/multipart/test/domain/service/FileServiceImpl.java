@@ -4,11 +4,15 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.MetadataException;
+import com.multipart.test.global.util.ImageProcess;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -17,29 +21,32 @@ public class FileServiceImpl implements FileService {
 	
 	private final AmazonS3Client amazonS3Client;
 	
+	private final ImageProcess imageProcess;
+	
 	@Value("${S3_BUCKET}")
 	private String S3Bucket;
 	
 	@Override
-	public String upload(MultipartFile image) throws Exception {
+	public String upload(MultipartFile image) throws ImageProcessingException, IOException, MetadataException {
 		
+		MultipartFile resizedImage = imageProcess.resizeImage(image, 620);
 		String originalName = image.getOriginalFilename(); // 파일 이름
 		System.out.println("파일 이름 : " + originalName);
 		String uuid = UUID.randomUUID().toString();
-		long size = image.getSize(); // 파일 크기
+		long size = resizedImage.getSize(); // 파일 크기
 		System.out.println("UUID 발급 : " + uuid);
 		
+		System.out.println("AWS 오브젝트 메타데이터 설정 중..");
 		ObjectMetadata objectMetaData = new ObjectMetadata();
-		objectMetaData.setContentType(image.getContentType());
+		objectMetaData.setContentType(resizedImage.getContentType());
 		objectMetaData.setContentLength(size);
-		System.out.println("메타데이터 확인 중..");
-		System.out.println("content type : " + image.getContentType());
+		System.out.println("content type : " + resizedImage.getContentType());
 		System.out.println("size : " + size);
-		System.out.println("메타데이터 확인 완료");
+		System.out.println("AWS 오브젝트 메타데이터 설정 완료");
 		
 		// S3에 업로드
 		amazonS3Client.putObject(
-				new PutObjectRequest(S3Bucket, uuid, image.getInputStream(), objectMetaData)
+				new PutObjectRequest(S3Bucket, uuid, resizedImage.getInputStream(), objectMetaData)
 						.withCannedAcl(CannedAccessControlList.PublicRead)
 		);
 		System.out.println("업로드 완료");

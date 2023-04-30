@@ -16,7 +16,13 @@ dependencies {
 	// S3 연결
 	implementation group : 'org.springframework.cloud', name:'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
 
-	implementation 'javax.xml.bind:jaxb-api:2.4.0'
+	// JPG 이미지 메타데이터 확인
+	implementation 'com.drewnoakes:metadata-extractor:2.18.0'
+
+	// 이미지 회전
+	implementation group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
+
+	implementation 'javax.xml.bind:jaxb-api:2.3.0'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
