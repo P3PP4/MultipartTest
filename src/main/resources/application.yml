@@ -1,0 +1,77 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+file:
+  path: C:/images
+cloud:
+  aws:
+    credentials:
+      access-key: ${S3_ACCESS_KEY}
+      secret-key: ${S3_SECRET_KEY}
+    s3:
+      bucket : ${S3_BUCKET}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
+#Spring doc
+#springdoc:
+#  packages-to-scan:
+#    - com.multipart.test
+#  paths-to-match:
+#    - /*/**
+#  api-docs:
+#    path: /api-docs/json
+#    groups:
+#      enabled: true
+#  swagger-ui:
+#    path: /swagger
+
+#Actuator
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include:
+#          - '*'
+#  endpoint:
+#    health:
+#      show-details: always
+
+# MatterMost Notification
+#notification:
+#  mattermost:
+#    webhook-url: ${MATTERMOST_URL}
+#    pretext: Web-BackEnd
+#    enabled: 'true'
+
+# cors ??
+#cors:
+#  allowed-origins: 'http://localhost:3000, http://localhost:8080, http://ifidietomorrow.co.kr, https://ifidietomorrow.co.kr'
+#  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+#  allowed-headers: '*'
+#  max-age: 3600
+
+# ssl ??
+#server:
+#  servlet:
+#    session:
+#      cookie:
+#        same-site: none
+#  port: 8443
+#  ssl:
+#    enabled: true
+#    key-store: classpath:keystore.p12
+#    key-store-password: ${SSL_PASSWORD}      # ????? ??? ??
+#    key-store-type: PKCS12
+
+# admin ??
+#admin:
+#  email: ${ADMIN_EMAIL}
